@@ -118,38 +118,38 @@
         }
       }
     },
-    "ng-image-slider": {
-      "root": "projects/ng-image-slider",
-      "sourceRoot": "projects/ng-image-slider/src",
+    "ng-image-video-gallery": {
+      "root": "projects/ng-image-video-gallery",
+      "sourceRoot": "projects/ng-image-video-gallery/src",
       "projectType": "library",
       "prefix": "lib",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
           "options": {
-            "tsConfig": "projects/ng-image-slider/tsconfig.lib.json",
-            "project": "projects/ng-image-slider/ng-package.json"
+            "tsConfig": "projects/ng-image-video-gallery/tsconfig.lib.json",
+            "project": "projects/ng-image-video-gallery/ng-package.json"
           },
           "configurations": {
             "production": {
-              "project": "projects/ng-image-slider/ng-package.prod.json"
+              "project": "projects/ng-image-video-gallery/ng-package.prod.json"
             }
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "projects/ng-image-slider/src/test.ts",
-            "tsConfig": "projects/ng-image-slider/tsconfig.spec.json",
-            "karmaConfig": "projects/ng-image-slider/karma.conf.js"
+            "main": "projects/ng-image-video-gallery/src/test.ts",
+            "tsConfig": "projects/ng-image-video-gallery/tsconfig.spec.json",
+            "karmaConfig": "projects/ng-image-video-gallery/karma.conf.js"
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "projects/ng-image-slider/tsconfig.lib.json",
-              "projects/ng-image-slider/tsconfig.spec.json"
+              "projects/ng-image-video-gallery/tsconfig.lib.json",
+              "projects/ng-image-video-gallery/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"

@@ -2,6 +2,7 @@
     <div class="lightbox-wrapper">
         <a class="close" (click)="closeLightbox()"></a>
         <div class="lightbox-div" #lightboxDiv>
+            <div [ngClass]="{'show': title}" class="image-title" *ngIf="galleryData?.image">{{ galleryData?.title ? galleryData?.title : '' }}</div>
             <div *ngIf="showLoading" class="pre-loader">
                 <div class="mnml-spinner"></div>
             </div>
@@ -26,13 +27,13 @@
                         [title]="img?.title || img?.alt || ''"
                         [showVideo]="true"
                         [direction]="direction">
-                    </custom-img>
-                </div>
+                    </custom-img>    
             </div>
-            <div [dir]="direction" [ngClass]="{'show': title, 'hide': !title}" class="caption">{{ title }}</div>
+            <!-- <div [dir]="direction" [ngClass]="{'show': title, 'hide': !title}" class="caption">{{ title }}</div> -->
             <a *ngIf="images.length > 1" [ngClass]="{'disable': lightboxPrevDisable}" class="prev icons prev-icon" (click)="prevImageLightbox()">&lsaquo;</a>
             <a *ngIf="images.length > 1" [ngClass]="{'disable': lightboxNextDisable}" class="next icons next-icon" (click)="nextImageLightbox()">&rsaquo;</a>
         </div>
+        <div [ngClass]="{'show': title}" class="image-description" *ngIf="galleryData?.image">{{ galleryData?.description ? galleryData?.description : '' }}</div>
     </div>
     <div *ngIf="paginationShow" class="popup-pagination">{{currentImageIndex + 1}} of {{totalImages}}</div>
 </div>

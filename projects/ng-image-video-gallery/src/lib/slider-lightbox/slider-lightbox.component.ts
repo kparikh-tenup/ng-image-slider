@@ -22,7 +22,8 @@ const LIGHTBOX_NEXT_ARROW_CLICK_MESSAGE = 'lightbox next',
 
 @Component({
     selector: 'slider-lightbox',
-    templateUrl: './slider-lightbox.component.html'
+    templateUrl: './slider-lightbox.component.html',
+    styleUrls: ['./slider-lightbox.component.scss']
 })
 export class SliderLightboxComponent implements OnInit, AfterViewInit, OnDestroy {
     totalImages: number = 0;
@@ -37,6 +38,7 @@ export class SliderLightboxComponent implements OnInit, AfterViewInit, OnDestroy
     speed: number = 1; // default speed in second
     title: string = '';
     currentImageIndex: number = 0;
+    galleryData;
 
     // for swipe event
     private swipeLightboxImgCoord?: [number, number];
@@ -44,6 +46,7 @@ export class SliderLightboxComponent implements OnInit, AfterViewInit, OnDestroy
 
     @ViewChild('lightboxDiv', { static: false }) lightboxDiv;
     @ViewChild('lightboxImageDiv', { static: false }) lightboxImageDiv;
+    @ViewChild('lightboxTextDiv', { static: false }) lightboxTextDiv;
 
     // @Inputs
     @Input() images: Array<object> = [];
@@ -114,6 +117,7 @@ export class SliderLightboxComponent implements OnInit, AfterViewInit, OnDestroy
         @Inject(DOCUMENT) private document: any) { }
 
     ngOnInit() {
+        console.log(this.images)
     }
 
     ngAfterViewInit() {
@@ -191,6 +195,7 @@ export class SliderLightboxComponent implements OnInit, AfterViewInit, OnDestroy
             && this.images[this.currentImageIndex]
             && (this.images[this.currentImageIndex]['image'] || this.images[this.currentImageIndex]['video'])) {
             this.title = this.images[this.currentImageIndex]['title'] || '';
+            this.galleryData = this.images[this.currentImageIndex];
             this.totalImages = this.images.length;
             for (const iframeI in this.document.getElementsByTagName('iframe')) {
                 if (this.document.getElementsByTagName('iframe')[iframeI]

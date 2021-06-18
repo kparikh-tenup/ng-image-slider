@@ -31,9 +31,6 @@ export class AppComponent {
     }
 
     ngOnInit() {
-        // this.sliderService.getoEmbedResponse('https%3A//vimeo.com/286898202&width=480&height=360').subscribe(res=> {
-        //     console.log(res)
-        // })
       }
 
     onChangeHandler() {
@@ -45,14 +42,9 @@ export class AppComponent {
     }
 
     setImageObject() {
-        // this.heroService.getImages().subscribe((data: any) => {
-        // setTimeout(() => {
-        //     this.imageObject = data;
-        // }, 3000);
-        // });
-     //  this.imageObject = this.heroService.getImagesWithOrder();
         this.imageObject.push({
                 video: 'https://vimeo.com/411598677',
+                title: 'video'
         })
         this.imageObject.push({
             video: 'https://www.youtube.com/watch?v=jLtQH93m4bQ'
@@ -61,7 +53,17 @@ export class AppComponent {
             video: 'https://vimeo.com/channels/staffpicks/548847228'
         })
         this.imageObject.push({
-            image: "https://i.picsum.photos/id/916/889/536.jpg?hmac=Vpy97Y1IPFVIZxWmh0O3p-hGT6dx1jKwIyY2gkz3kAw"
+            image: "https://i.picsum.photos/id/916/889/536.jpg?hmac=Vpy97Y1IPFVIZxWmh0O3p-hGT6dx1jKwIyY2gkz3kAw",
+            title: 'Images',
+            description: 'titletitletitle title title title titletitletitle title title title titletitletitle title title title titletitletitle title title title titletitletitle title title title titletitletitle title title title titletitletitle title title title'
+        })
+        this.imageObject.push({
+            image: "https://i.picsum.photos/id/916/889/536.jpg?hmac=Vpy97Y1IPFVIZxWmh0O3p-hGT6dx1jKwIyY2gkz3kAw",
+            title: 'Images title',
+            description: 'titletitletitle title title title titletitletitle title title title titletitletitle title title title titletitletitle title title title titletitletitle title title title titletitletitle title title title titletitletitle title title title'
+        })
+        this.imageObject.push({
+            video: 'https://www.youtube.com/watch?v=p4qJ6r7J8_A&list=PLZnxqowr6IKjAKo3wmBBgjUgfFejvqho_'
         })
       //  console.log(this.imageObject)
     }

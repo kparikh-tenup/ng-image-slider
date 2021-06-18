@@ -93,7 +93,7 @@ export class SliderCustomImageComponent implements OnChanges {
             this.sliderService.getoEmbedResponse(url).subscribe(res=> {
           if (this.showVideo) {
             this.type = this.VIMEO;
-            let vimeoVideoUrl = 'https://player.vimeo.com/video/'+ res['video_id'];
+            let vimeoVideoUrl = `${'https://player.vimeo.com/video/'}${res['video_id']}`;
             this.vimeoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(vimeoVideoUrl);
         } else {
             this.type = this.IMAGE;

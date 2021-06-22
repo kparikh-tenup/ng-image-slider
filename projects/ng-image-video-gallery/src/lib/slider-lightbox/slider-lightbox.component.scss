@@ -1,9 +1,8 @@
 .lightbox-header {
     color: white;
-    padding: 20px;
+    padding: 20px 45px;
 
 .image-title {
-    height: 20px;
     -webkit-box-orient: vertical;
     display: -webkit-box;
     -webkit-line-clamp: 1;
@@ -13,23 +12,14 @@
 }
 }
 
-.lightbox-wrapper-main {
-      &.ng-ligthbox-pagination {
-            height: calc(100% - 200px);
-        }
-}
-
 .lightbox-image-main-wrapper {
-    max-height: calc(100% - 200px);
     margin-bottom: 20px;
 }
 
 .lightbox-footer {
     color: white;
     padding: 20px;
-    bottom: 0;
     .image-description {
-        height: 200px;
         overflow: auto;
         text-align: center;
         -webkit-box-orient: vertical;

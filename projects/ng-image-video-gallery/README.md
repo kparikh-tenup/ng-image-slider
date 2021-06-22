@@ -12,7 +12,8 @@ Also support youtube and mp4 video urls.
   - captures keyboard next/previous arrow key event for lightbox image move
   - Support Images (jpeg, jpg, gif, png and Base64-String), Youtube url, Vimeo url and MP4 video (url and Base64-String)
   - Handling runtime image arraylist changes
-
+  - Added support for description in slider-lightbox
+  -Separate the title & footer from images section
 
 # Installation
 `npm install ng-image-video-gallery --save`

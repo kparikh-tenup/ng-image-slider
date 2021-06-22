@@ -1,12 +1,14 @@
 <div *ngIf="imageFullscreenView" class="ng-image-fullscreen-view">
-    <div class="lightbox-wrapper">
+    <div class="lightbox-wrapper" [ngClass]="galleryData?.image ? 'lightbox-wrapper-main' : ''">
         <a class="close" (click)="closeLightbox()"></a>
         <div class="lightbox-div" #lightboxDiv>
-            <div [ngClass]="{'show': title}" class="image-title" *ngIf="galleryData?.image">{{ galleryData?.title ? galleryData?.title : '' }}</div>
+          <div [ngClass]="galleryData?.image ? 'lightbox-header' : 'lightbox-video-header'">
+            <div [ngClass]="{'show': title}" class="image-title ">{{ galleryData?.title ? galleryData?.title : '' }}</div>
+          </div>
             <div *ngIf="showLoading" class="pre-loader">
                 <div class="mnml-spinner"></div>
             </div>
-            <div class="lightbox-image-main"
+            <div class="lightbox-image-main" [ngClass]="galleryData?.image ? 'lightbox-image-main-wrapper' : ''"
                 [ngStyle]="{'margin-left': marginLeft + 'px', 'grid-template-columns': 'repeat('+images.length+',1fr)', 'transition': effectStyle}">
                 <div class="lightbox-image"
                     [ngStyle]="{'width': popupWidth + 'px'}"
@@ -33,7 +35,9 @@
             <a *ngIf="images.length > 1" [ngClass]="{'disable': lightboxPrevDisable}" class="prev icons prev-icon" (click)="prevImageLightbox()">&lsaquo;</a>
             <a *ngIf="images.length > 1" [ngClass]="{'disable': lightboxNextDisable}" class="next icons next-icon" (click)="nextImageLightbox()">&rsaquo;</a>
         </div>
-        <div [ngClass]="{'show': title}" class="image-description" *ngIf="galleryData?.image">{{ galleryData?.description ? galleryData?.description : '' }}</div>
+        <div [ngClass]="galleryData?.description ? 'lightbox-footer' : 'lightbox-video-footer' ">
+            <div  [ngClass]="galleryData?.description ? 'image-description' : ''">{{ galleryData?.description ?  galleryData?.description : '' }}</div>
+        </div>
     </div>
     <div *ngIf="paginationShow" class="popup-pagination">{{currentImageIndex + 1}} of {{totalImages}}</div>
 </div>

@@ -1,13 +1,32 @@
-.image-title {
+.lightbox-header {
     color: white;
-    padding: 10px;
+    padding: 20px 45px;
+
+.image-title {
+    -webkit-box-orient: vertical;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-all;
+}
 }
 
-.image-description {
+.lightbox-image-main-wrapper {
+    margin-bottom: 20px;
+}
+
+.lightbox-footer {
     color: white;
-    bottom: 0;
-    height: 80px;
-    overflow: auto;
-    padding:10px;
-    text-align: center;
+    padding: 20px;
+    .image-description {
+        overflow: auto;
+        text-align: center;
+        -webkit-box-orient: vertical;
+        display: -webkit-box;
+        -webkit-line-clamp: 5;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        word-break: break-all;
+    }
 }

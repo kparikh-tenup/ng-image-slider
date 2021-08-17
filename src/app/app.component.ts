@@ -55,6 +55,8 @@ export class AppComponent {
         this.imageObject.push({
             image: "https://i.picsum.photos/id/916/889/536.jpg?hmac=Vpy97Y1IPFVIZxWmh0O3p-hGT6dx1jKwIyY2gkz3kAw",
             title: 'Images',
+            imageTitle: 'imageTitle Image',
+            imageDescription: 'imageDescription imageDescription',
             description: 'titletitletitle title title title titletitletitle title title title titletitletitle title title title titletitletitle title title title titletitletitle title title title titletitletitle title title title titletitletitle title title title'
         })
         this.imageObject.push({

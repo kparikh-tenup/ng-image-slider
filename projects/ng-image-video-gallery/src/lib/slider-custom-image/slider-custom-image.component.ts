@@ -44,6 +44,8 @@ export class SliderCustomImageComponent implements OnChanges {
     @Input() direction: string = 'ltr';
     @Input() ratio: boolean = false;
     @Input() lazy: boolean = false;
+    @Input() imgData;
+    @Input() imgHeight;
 
     constructor(
         public imageSliderService: NgImageSliderService,

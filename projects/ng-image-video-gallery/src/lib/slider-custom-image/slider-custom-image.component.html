@@ -1,12 +1,13 @@
 
     <div *ngIf="fileUrl" class="custom-image-main" [ngClass]="{'ng-fullimage-loading': imageLoading}">
-        <img class="image"
+        <img class="image cursor-pointer"
             (load)="imageLoading = false"
-            [ngClass]="{'ratio': ratio}"
+            [ngClass]="type === IMAGE && (imgData?.imageTitle || imgData?.imageDescription) ? {imageTitleClass: 'imageTitleClass','ratio': ratio} : {videoClass: 'videoClass','ratio': ratio}"
             *ngIf="(type === IMAGE && fileUrl) || (type === IMAGE && vimeoUrl)"
             [src]="vimeoUrl ? vimeoUrl : fileUrl"
             [alt]="alt"
             [title]="title"
+            [ngStyle]="{'height': imgHeight}"
             [attr.loading]="lazy == true ? 'lazy' : null">
         <iframe class="youtube"
             *ngIf="(type === YOUTUBE && fileUrl) || (type === VIMEO && vimeoUrl)"
@@ -28,5 +29,5 @@
             Your browser does not support the video tag.
         </video>
         <div [dir]="direction" *ngIf="!fileUrl" class="invalid-msg">Invalid file format</div>
-        <span *ngIf="type === YOUTUBE || type === VIDEO || isVideo" class="youtube-icon"></span>
+        <span *ngIf="type === YOUTUBE || type === VIDEO || isVideo" class="youtube-icon cursor-pointer" [ngStyle]="{'height': imgHeight}"></span>
     </div>

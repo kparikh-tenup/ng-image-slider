@@ -47,6 +47,7 @@ export class NgImageSliderComponent implements OnChanges, OnInit, DoCheck, After
     sliderImageWidth: number = 205;
     sliderImageReceivedWidth: number | string = 205;
     sliderImageHeight: number = 200;
+    sliderHeight:number | string = '205px'
     sliderImageReceivedHeight: number | string = 205;
     sliderImageSizeWithPadding = 211;
     autoSlideCount: number = 0;
@@ -83,6 +84,9 @@ export class NgImageSliderComponent implements OnChanges, OnInit, DoCheck, After
             }
             if (data.hasOwnProperty('height') && (typeof (data['height']) === 'number' || typeof (data['height']) === 'string')) {
                 this.sliderImageReceivedHeight = data['height'];
+            }
+            if (data.hasOwnProperty('sliderHeight') && (typeof (data['sliderHeight']) === 'number' || typeof (data['sliderHeight']) === 'string')) {
+                this.sliderHeight = data['sliderHeight'];
             }
         }
     }

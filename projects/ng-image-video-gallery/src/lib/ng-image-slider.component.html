@@ -1,7 +1,6 @@
-<div class="ng-image-slider" [ngStyle]="{'height':sliderImageHeight+'px'}">
+<div class="ng-image-slider" [ngStyle]="{'height':sliderHeight}">
     <div class="ng-image-slider-container">
         <div class="main"
-            [ngStyle]="{'height':sliderImageHeight+'px'}"
             #sliderMain>
             <div class="main-inner"
                 *ngIf="imageObj.length"
@@ -9,10 +8,11 @@
                 [ngStyle]="{'margin-left':leftPos+'px', 'width':imageParentDivWidth+'px', 'transition': effectStyle}"
                 (touchstart)="swipe($event, 'start')"
                 (touchend)="swipe($event, 'end')">
-                <div *ngFor="let img of imageObj; let i = index"
+                <ng-container *ngFor="let img of imageObj; let i = index">
+                  <div 
+                  [ngStyle]="{'width':sliderImageWidth+'px', 'margin-left':imageMargin+'px', 'margin-right':imageMargin+'px'}" class="img-div">
+                    <div [ngStyle]="{'height':sliderImageHeight+'px'}" class="img-dev-bg"
                     [ngClass]="{'image-popup': imagePopup, 'selected-image': activeImageIndex == i}"
-                    [ngStyle]="{'width':sliderImageWidth+'px', 'margin-left':imageMargin+'px', 'margin-right':imageMargin+'px'}"
-                    class="img-div"
                     (click)="imageOnClick(img.index)"
                     (mouseenter)="stopSlideOnHover && imageMouseEnterHandler()"
                     (mouseleave)="stopSlideOnHover && imageAutoSlide()"
@@ -23,10 +23,17 @@
                         [title]="img?.title || img?.alt || ''"
                         [direction]="textDirection"
                         [ratio]="manageImageRatio"
-                        [lazy]="lazyLoading">
+                        [lazy]="lazyLoading"
+                        [imgHeight]="sliderImageHeight+'px'"
+                        [imgData]='img'>
                     </custom-img>
-                    <!-- <div [dir]="textDirection" class="caption" *ngIf="img?.title">{{ img?.title }}</div> -->
                 </div>
+                    <div [dir]="textDirection" class="caption image-dev-container" *ngIf="img?.imageTitle || img?.imageDescription">
+                        <p *ngIf="img?.imageTitle" class="image-title">{{ img?.imageTitle }}</p>
+                        <p *ngIf="img?.imageDescription" class="image-description">{{ img?.imageDescription }}</p>
+                    </div>
+                  </div>
+                </ng-container>
             </div>
             <div class="ng-image-slider-error"
                 *ngIf="!imageObj.length">

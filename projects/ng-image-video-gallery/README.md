@@ -3,6 +3,10 @@
 An Angular responsive image slider with lightbox popup.
 Also support youtube and mp4 video urls.
 
+Added support of vimeo url 
+Added support of brightcove url
+Added support of description & title
+
 ## Features!
 
   - Responsive (support images width and height in both % and px)

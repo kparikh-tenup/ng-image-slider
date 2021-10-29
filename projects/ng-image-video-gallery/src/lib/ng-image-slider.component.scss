@@ -477,3 +477,12 @@
 .cursor-pointer {
     cursor: pointer;
 }
+
+.thumbnail-section {
+    display: flex;
+    justify-content: space-between;
+    .thumbnail-image {
+        height: 27px;
+    }
+
+}

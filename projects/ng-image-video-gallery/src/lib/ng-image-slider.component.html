@@ -17,7 +17,7 @@
                     (mouseenter)="stopSlideOnHover && imageMouseEnterHandler()"
                     (mouseleave)="stopSlideOnHover && imageAutoSlide()"
                     #imageDiv>
-                    <custom-img [imageUrl]="img?.thumbImage || img?.posterImage || img?.video ||img?.image"
+                    <custom-img (getThumbnail)="thumbnailImages($event)"[imageUrl]="img?.thumbImage || img?.posterImage || img?.video ||img?.image"
                         [isVideo]="!!(img?.posterImage || img?.video)"
                         [alt]="img?.alt || img?.title || ''"
                         [title]="img?.title || img?.alt || ''"
@@ -25,7 +25,8 @@
                         [ratio]="manageImageRatio"
                         [lazy]="lazyLoading"
                         [imgHeight]="sliderImageHeight+'px'"
-                        [imgData]='img'>
+                        [imgData]='img'
+                        [imagePositionInSlider]="img['index']">
                     </custom-img>
                 </div>
                     <div [dir]="textDirection" class="caption image-dev-container" *ngIf="img?.imageTitle || img?.imageDescription">
@@ -71,4 +72,10 @@
         (nextImage)="lightboxArrowClickHandler($event)"
         (close)="close()">
     </slider-lightbox>
+</div>
+<div class="thumbnail-section">
+<ng-container *ngFor="let img of thubnailImages; let i = index">
+    <!-- {{img | json}} -->
+        <img [src]="img?.image" class="thumbnail-image">
+</ng-container>
 </div>

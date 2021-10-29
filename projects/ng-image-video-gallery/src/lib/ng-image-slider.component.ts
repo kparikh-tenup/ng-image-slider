@@ -57,6 +57,7 @@ export class NgImageSliderComponent implements OnChanges, OnInit, DoCheck, After
     textDirection: string = 'ltr';
     imageMargin: number = 3;
     sliderOrderType:string ='ASC';
+    thubnailImages = [];
 
     // for swipe event
     private swipeCoord?: [number, number];
@@ -155,7 +156,6 @@ export class NgImageSliderComponent implements OnChanges, OnInit, DoCheck, After
         }
     }
     @Input() lazyLoading: boolean = false;
-
     // @Outputs
     @Output() imageClick = new EventEmitter<number>();
     @Output() arrowClick = new EventEmitter<object>();
@@ -187,7 +187,7 @@ export class NgImageSliderComponent implements OnChanges, OnInit, DoCheck, After
         private cdRef: ChangeDetectorRef,
         @Inject(PLATFORM_ID) private platformId: Object,
         public imageSliderService: NgImageSliderService,
-        private elRef: ElementRef
+        private elRef: ElementRef,
         // @Inject(ElementRef) private _elementRef: ElementRef
     ) {
     }
@@ -204,6 +204,7 @@ export class NgImageSliderComponent implements OnChanges, OnInit, DoCheck, After
                 this.imageObj.unshift(this.imageObj[this.imageObj.length - i]);
             }
         }
+        this.thubnailImages = this.imageObj;
     }
 
     // for slider
@@ -499,6 +500,16 @@ export class NgImageSliderComponent implements OnChanges, OnInit, DoCheck, After
                 } else {
                     this.prev();
                 }
+            }
+        }
+
+    }
+
+    thumbnailImages(event) {
+        for(let i=0; i<this.thubnailImages?.length; i++) {
+            if(event?.index === i) {
+                this.thubnailImages[i]['image'] = event?.image?.changingThisBreaksApplicationSecurity;
+                break;
             }
         }
     }

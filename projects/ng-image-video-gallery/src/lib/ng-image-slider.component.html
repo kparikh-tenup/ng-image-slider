@@ -75,7 +75,7 @@
 </div>
 <div class="thumbnail-section">
 <ng-container *ngFor="let img of thubnailImages; let i = index">
-        <a (click)="clickOnThumbnail(i)" class="cursor-pointer" [ngClass]="i===thmbnailImageIndex ? 'active' : ''">
+        <a (click)="clickOnThumbnail(i)" class="thumbnail-section-image cursor-pointer" [ngClass]="i===thmbnailImageIndex ? 'active' : ''">
             <img [src]="img?.image" class="thumbnail-image">
         </a>
 </ng-container>

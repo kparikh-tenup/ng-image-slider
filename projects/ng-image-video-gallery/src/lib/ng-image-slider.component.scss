@@ -481,12 +481,13 @@
 .thumbnail-section {
     display: flex;
     justify-content: space-between;
-    .thumbnail-image {
-        height: 27px;
-    }
-
-    .active {
-        border: 1px solid blue;
+    .thumbnail-section-image {
+        .thumbnail-image {
+            height: 27px;
+        }
+        &.active {
+            border: 1px solid blue;
+        }
     }
 
 }

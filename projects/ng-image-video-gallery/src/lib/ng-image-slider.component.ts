@@ -58,6 +58,7 @@ export class NgImageSliderComponent implements OnChanges, OnInit, DoCheck, After
     imageMargin: number = 3;
     sliderOrderType:string ='ASC';
     thubnailImages = [];
+    thmbnailImageIndex;
 
     // for swipe event
     private swipeCoord?: [number, number];
@@ -419,6 +420,7 @@ export class NgImageSliderComponent implements OnChanges, OnInit, DoCheck, After
         if (this.imageObj[currentIndex - 1] && this.imageObj[currentIndex - 1]['index'] !== undefined) {
             this.visiableImageIndex = this.imageObj[currentIndex - 1]['index'];
         }
+        this.thmbnailImageIndex = currentIndex-1;
     }
 
     /**
@@ -512,5 +514,10 @@ export class NgImageSliderComponent implements OnChanges, OnInit, DoCheck, After
                 break;
             }
         }
+    }
+
+    clickOnThumbnail(index) {
+        this.thmbnailImageIndex = index;
+        this.leftPos = -this.sliderImageSizeWithPadding *(index);
     }
 }

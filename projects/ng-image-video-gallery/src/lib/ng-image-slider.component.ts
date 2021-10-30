@@ -58,7 +58,7 @@ export class NgImageSliderComponent implements OnChanges, OnInit, DoCheck, After
     imageMargin: number = 3;
     sliderOrderType:string ='ASC';
     thubnailImages = [];
-    thmbnailImageIndex;
+    thmbnailImageIndex = 0;
 
     // for swipe event
     private swipeCoord?: [number, number];

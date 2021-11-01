@@ -21,7 +21,10 @@
             (arrowClick)="arrowOnClick($event)"
             (lightboxClose)="lightboxClose()"
             (lightboxArrowClick)="lightboxArrowClick($event)"
-            [imageSize]="{width: '400px', height: '350px', sliderHeight: '500px'}"></ng-image-slider>
+            [thumbnailSize] = "{width:'400px',height: '300px'}"
+            [isShowThumbnailImage]="true"
+            [isThumbnailbSlider] ="false"
+            [imageSize]="{width: '40%', height: '350px', sliderHeight: '500px'}"></ng-image-slider>
     </div>
 
     <p class="demo-title-sub margin-auto">PLAY WITH IT!</p>

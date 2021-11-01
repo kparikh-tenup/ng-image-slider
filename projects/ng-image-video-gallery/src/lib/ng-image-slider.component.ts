@@ -34,28 +34,39 @@ const NEXT_ARROW_CLICK_MESSAGE = 'next',
 export class NgImageSliderComponent implements OnChanges, OnInit, DoCheck, AfterViewInit, OnDestroy {
     // for slider
     sliderMainDivWidth: number = 0;
+    thumbnailSliderMainDivWidth: number = 0;
     imageParentDivWidth: number = 0;
+    thumbnailParentDivWidth: number = 0;
     imageObj: Array<object> = [];
     ligthboxImageObj: Array<object> = [];
     totalImages: number = 0;
     leftPos: number = 0;
+    thumbnailLeftPos: number = 0;
     effectStyle: string = 'all 1s ease-in-out';
     speed: number = 1; // default speed in second
     sliderPrevDisable: boolean = false;
+    sliderThumbnailPrevDisable: boolean = false;
     sliderNextDisable: boolean = false;
+    sliderThumbnailNextDisable: boolean = false;
     slideImageCount: number = 1;
+    slideThumbnailCount: number = 1;
     sliderImageWidth: number = 205;
+    sliderThumbnailWidth: number = 205;
     sliderImageReceivedWidth: number | string = 205;
+    sliderThumbnailReceivedWidth: number | string = 205;
     sliderImageHeight: number = 200;
     sliderHeight:number | string = '205px'
     sliderImageReceivedHeight: number | string = 205;
+    sliderThumbnailReceivedHeight: number | string = 205;
     sliderImageSizeWithPadding = 211;
+    sliderThumbnailSizeWithPadding = 211;
     autoSlideCount: number = 0;
     stopSlideOnHover: boolean = true;
     autoSlideInterval;
     showArrowButton: boolean = true;
     textDirection: string = 'ltr';
     imageMargin: number = 3;
+    thumbnailMargin: number = 3
     sliderOrderType:string ='ASC';
     thubnailImages = [];
     thmbnailImageIndex = 0;
@@ -68,11 +79,15 @@ export class NgImageSliderComponent implements OnChanges, OnInit, DoCheck, After
     ligthboxShow: boolean = false;
     activeImageIndex: number = -1;
     visiableImageIndex: number = 0;
+    visiableThumbnailIndex: number = 0;
 
     @ViewChild('sliderMain', { static: false }) sliderMain;
     @ViewChild('imageDiv', { static: false }) imageDiv;
+    @ViewChild('thumnailSliderMain', { static: false }) thumnailSliderMain;
 
     // @inputs
+    @Input() isShowThumbnailImage: boolean = false;
+    @Input() isThumbnailbSlider:boolean = false;
     @Input()
     set imageSize(data) {
         if (data
@@ -89,6 +104,21 @@ export class NgImageSliderComponent implements OnChanges, OnInit, DoCheck, After
             }
             if (data.hasOwnProperty('sliderHeight') && (typeof (data['sliderHeight']) === 'number' || typeof (data['sliderHeight']) === 'string')) {
                 this.sliderHeight = data['sliderHeight'];
+            }
+        }
+    }
+    @Input()
+    set thumbnailSize(data) {
+        if (data
+            && typeof (data) === 'object') {
+            if (data.hasOwnProperty('space') && typeof (data['space']) === 'number' && data['space'] > -1) {
+                this.thumbnailMargin = data['space'];
+            }
+            if (data.hasOwnProperty('width') && (typeof (data['width']) === 'number' || typeof (data['width']) === 'string')) {
+                this.sliderThumbnailReceivedWidth = data['width'];
+            }
+            if (data.hasOwnProperty('height') && (typeof (data['height']) === 'number' || typeof (data['height']) === 'string')) {
+                this.sliderThumbnailReceivedHeight = data['height'];
             }
         }
     }
@@ -160,6 +190,7 @@ export class NgImageSliderComponent implements OnChanges, OnInit, DoCheck, After
     // @Outputs
     @Output() imageClick = new EventEmitter<number>();
     @Output() arrowClick = new EventEmitter<object>();
+    @Output() thumbnailArrowClick = new EventEmitter<object>();
     @Output() lightboxArrowClick = new EventEmitter<object>();
     @Output() lightboxClose = new EventEmitter<object>();
 
@@ -201,6 +232,8 @@ export class NgImageSliderComponent implements OnChanges, OnInit, DoCheck, After
         if (this.infinite) {
             this.effectStyle = 'none';
             this.leftPos = -1 * this.sliderImageSizeWithPadding * this.slideImageCount;
+            this.thumbnailLeftPos = -1 * this.sliderThumbnailSizeWithPadding * this.slideThumbnailCount;
+
             for (let i = 1; i <= this.slideImageCount; i++) {
                 this.imageObj.unshift(this.imageObj[this.imageObj.length - i]);
             }
@@ -211,6 +244,7 @@ export class NgImageSliderComponent implements OnChanges, OnInit, DoCheck, After
     // for slider
     ngAfterViewInit() {
         this.setSliderWidth();
+        this.setThumbnailSliderWidth();
         this.cdRef.detectChanges();
         if (isPlatformBrowser(this.platformId)) {
             this.imageAutoSlide();
@@ -243,6 +277,7 @@ export class NgImageSliderComponent implements OnChanges, OnInit, DoCheck, After
                 && (size.previousValue.width !== size.currentValue.width
                     || size.previousValue.height !== size.currentValue.height)) {
                 this.setSliderWidth();
+                this.setThumbnailSliderWidth();
             }
         }
     }
@@ -322,6 +357,50 @@ export class NgImageSliderComponent implements OnChanges, OnInit, DoCheck, After
         this.nextPrevSliderButtonDisable();
     }
 
+    setThumbnailSliderWidth() {
+        if (this.thumnailSliderMain
+            && this.thumnailSliderMain.nativeElement
+            && this.thumnailSliderMain.nativeElement.offsetWidth) {
+            this.thumbnailSliderMainDivWidth = this.thumnailSliderMain.nativeElement.offsetWidth;
+        }
+
+        if (this.thumbnailSliderMainDivWidth
+            && this.sliderThumbnailReceivedWidth) {
+            if (typeof this.sliderThumbnailReceivedWidth === 'number') {
+                this.sliderThumbnailWidth = this.sliderThumbnailReceivedWidth;
+            } else if (typeof this.sliderThumbnailReceivedWidth === 'string') {
+                if (this.sliderThumbnailReceivedWidth.indexOf('px') >= 0) {
+                    this.sliderThumbnailWidth = parseFloat(this.sliderThumbnailReceivedWidth);
+                } else if (this.sliderThumbnailReceivedWidth.indexOf('%') >= 0) {
+                    this.sliderThumbnailWidth = +((this.thumbnailSliderMainDivWidth * parseFloat(this.sliderThumbnailReceivedWidth)) / 100).toFixed(2);
+                } else if (parseFloat(this.sliderThumbnailReceivedWidth)) {
+                    this.sliderThumbnailWidth = parseFloat(this.sliderThumbnailReceivedWidth);
+                }
+            }
+        }
+
+        if (window && window.innerHeight
+            && this.sliderThumbnailReceivedHeight) {
+            if (typeof this.sliderThumbnailReceivedHeight === 'number') {
+                this.sliderImageHeight = this.sliderThumbnailReceivedHeight;
+            } else if (typeof this.sliderThumbnailReceivedHeight === 'string') {
+                if (this.sliderThumbnailReceivedHeight.indexOf('px') >= 0) {
+                    this.sliderImageHeight = parseFloat(this.sliderThumbnailReceivedHeight);
+                } else if (this.sliderThumbnailReceivedHeight.indexOf('%') >= 0) {
+                    this.sliderImageHeight = +((window.innerHeight * parseFloat(this.sliderThumbnailReceivedHeight)) / 100).toFixed(2);
+                } else if (parseFloat(this.sliderThumbnailReceivedHeight)) {
+                    this.sliderImageHeight = parseFloat(this.sliderThumbnailReceivedHeight);
+                }
+            }
+        }
+        this.sliderThumbnailSizeWithPadding = this.sliderThumbnailWidth + (this.imageMargin * 2);
+        this.thumbnailParentDivWidth = this.imageObj.length * this.sliderThumbnailSizeWithPadding;
+        if (this.imageDiv && this.imageDiv.nativeElement && this.imageDiv.nativeElement.offsetWidth) {
+            this.thumbnailLeftPos = this.infinite ? -1 * this.sliderThumbnailSizeWithPadding * this.slideThumbnailCount : 0;
+        }
+        this.nextPrevThumnailSliderButtonDisable();
+    }
+
     imageOnClick(index) {
         this.activeImageIndex = index;
         if (this.imagePopup) {
@@ -358,6 +437,20 @@ export class NgImageSliderComponent implements OnChanges, OnInit, DoCheck, After
         }
     }
 
+    prevThumbnail() {
+        if (!this.sliderThumbnailPrevDisable) {
+            if (this.infinite) {
+                this.infinitePrevImg();
+            } else {
+                this.prevThumbnailImg();
+            }
+
+            //this.arrowClick.emit(PREV_ARROW_CLICK_MESSAGE);
+            this.sliderArrowDisableTeam(PREV_ARROW_CLICK_MESSAGE);
+            this.getVisiableThumbnailIndex();
+        }
+    }
+
     next() {
         if (!this.sliderNextDisable) {
             if (this.infinite) {
@@ -372,6 +465,20 @@ export class NgImageSliderComponent implements OnChanges, OnInit, DoCheck, After
         }
     }
 
+    nextThumbnail() {
+        if (!this.sliderThumbnailNextDisable) {
+            if (this.infinite) {
+                this.infiniteNextImg();
+            } else {
+                this.nextThumbnailImg();
+            }
+
+            //this.arrowClick.emit(NEXT_ARROW_CLICK_MESSAGE);
+            this.sliderArrowDisableTeam(NEXT_ARROW_CLICK_MESSAGE);
+            this.getVisiableThumbnailIndex();
+        }  
+    }
+
     prevImg() {
         if (0 >= this.leftPos + (this.sliderImageSizeWithPadding * this.slideImageCount)) {
             this.leftPos += this.sliderImageSizeWithPadding * this.slideImageCount;
@@ -380,11 +487,27 @@ export class NgImageSliderComponent implements OnChanges, OnInit, DoCheck, After
         }
     }
 
+    prevThumbnailImg() {
+        if (0 >= this.thumbnailLeftPos + (this.sliderThumbnailSizeWithPadding * this.slideThumbnailCount)) {
+            this.thumbnailLeftPos += this.sliderThumbnailSizeWithPadding * this.slideThumbnailCount;
+        } else {
+            this.thumbnailLeftPos = 0;
+        }
+    }
+
     nextImg() {
         if ((this.imageParentDivWidth + this.leftPos) - this.sliderMainDivWidth > this.sliderImageSizeWithPadding * this.slideImageCount) {
             this.leftPos -= this.sliderImageSizeWithPadding * this.slideImageCount;
         } else if ((this.imageParentDivWidth + this.leftPos) - this.sliderMainDivWidth > 0) {
             this.leftPos -= (this.imageParentDivWidth + this.leftPos) - this.sliderMainDivWidth;
+        }
+    }
+
+    nextThumbnailImg() {
+        if ((this.thumbnailParentDivWidth + this.thumbnailLeftPos) - this.thumbnailSliderMainDivWidth > this.sliderThumbnailSizeWithPadding * this.slideThumbnailCount) {
+            this.thumbnailLeftPos -= this.sliderThumbnailSizeWithPadding * this.slideThumbnailCount;
+        } else if ((this.thumbnailParentDivWidth + this.thumbnailLeftPos) - this.thumbnailSliderMainDivWidth > 0) {
+            this.thumbnailLeftPos -= (this.thumbnailParentDivWidth + this.thumbnailLeftPos) - this.thumbnailSliderMainDivWidth;
         }
     }
 
@@ -423,6 +546,13 @@ export class NgImageSliderComponent implements OnChanges, OnInit, DoCheck, After
         this.thmbnailImageIndex = currentIndex-1;
     }
 
+    getVisiableThumbnailIndex() {
+        const currentIndex = Math.round((Math.abs(this.thumbnailLeftPos) + this.sliderThumbnailWidth) / this.sliderThumbnailWidth);
+        if (this.thumbnailImages[currentIndex - 1] && this.thumbnailImages[currentIndex - 1]['index'] !== undefined) {
+            this.visiableThumbnailIndex = this.thumbnailImages[currentIndex - 1]['index'];
+        }
+    }
+
     /**
      * Disable slider left/right arrow when image moving
      */
@@ -431,6 +561,14 @@ export class NgImageSliderComponent implements OnChanges, OnInit, DoCheck, After
         this.sliderPrevDisable = true;
         setTimeout(() => {
             this.nextPrevSliderButtonDisable(msg);
+        }, this.speed * 1000);
+    }
+
+    sliderThumbnailArrowDisableTeam(msg) {
+        this.sliderThumbnailNextDisable = true;
+        this.sliderThumbnailPrevDisable = true;
+        setTimeout(() => {
+            this.nextPrevThumnailSliderButtonDisable(msg);
         }, this.speed * 1000);
     }
 
@@ -453,6 +591,31 @@ export class NgImageSliderComponent implements OnChanges, OnInit, DoCheck, After
         
         if (msg){
             this.arrowClick.emit({
+                action: msg,
+                ...actionMsg
+            });
+        }
+    }
+
+    nextPrevThumnailSliderButtonDisable(msg?) {
+        this.sliderThumbnailNextDisable = false;
+        this.sliderThumbnailPrevDisable = false;
+        const actionMsg = {};
+        if (!this.infinite) {
+            if (this.thumbnailParentDivWidth + this.leftPos <= this.thumbnailSliderMainDivWidth) {
+                this.sliderThumbnailNextDisable = true;
+            }
+
+            if (this.leftPos >= 0) {
+                this.sliderThumbnailPrevDisable = true;
+            }
+
+            actionMsg['prevDisable'] = this.sliderThumbnailPrevDisable;
+            actionMsg['nextDisable'] = this.sliderThumbnailNextDisable;
+        } 
+        
+        if (msg){
+            this.thumbnailArrowClick.emit({
                 action: msg,
                 ...actionMsg
             });

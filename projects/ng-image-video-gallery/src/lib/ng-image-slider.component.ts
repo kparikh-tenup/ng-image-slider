@@ -446,7 +446,7 @@ export class NgImageSliderComponent implements OnChanges, OnInit, DoCheck, After
             }
 
             //this.arrowClick.emit(PREV_ARROW_CLICK_MESSAGE);
-            this.sliderArrowDisableTeam(PREV_ARROW_CLICK_MESSAGE);
+            this.sliderThumbnailArrowDisableTeam(PREV_ARROW_CLICK_MESSAGE);
             this.getVisiableThumbnailIndex();
         }
     }
@@ -458,7 +458,6 @@ export class NgImageSliderComponent implements OnChanges, OnInit, DoCheck, After
             } else {
                 this.nextImg();
             }
-
             //this.arrowClick.emit(NEXT_ARROW_CLICK_MESSAGE);
             this.sliderArrowDisableTeam(NEXT_ARROW_CLICK_MESSAGE);
             this.getVisiableIndex();
@@ -474,7 +473,7 @@ export class NgImageSliderComponent implements OnChanges, OnInit, DoCheck, After
             }
 
             //this.arrowClick.emit(NEXT_ARROW_CLICK_MESSAGE);
-            this.sliderArrowDisableTeam(NEXT_ARROW_CLICK_MESSAGE);
+            this.sliderThumbnailArrowDisableTeam(NEXT_ARROW_CLICK_MESSAGE);
             this.getVisiableThumbnailIndex();
         }  
     }
@@ -602,11 +601,11 @@ export class NgImageSliderComponent implements OnChanges, OnInit, DoCheck, After
         this.sliderThumbnailPrevDisable = false;
         const actionMsg = {};
         if (!this.infinite) {
-            if (this.thumbnailParentDivWidth + this.leftPos <= this.thumbnailSliderMainDivWidth) {
+            if (this.thumbnailParentDivWidth + this.thumbnailLeftPos <= this.thumbnailSliderMainDivWidth) {
                 this.sliderThumbnailNextDisable = true;
             }
 
-            if (this.leftPos >= 0) {
+            if (this.thumbnailLeftPos >= 0) {
                 this.sliderThumbnailPrevDisable = true;
             }
 

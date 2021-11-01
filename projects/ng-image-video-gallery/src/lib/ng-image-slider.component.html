@@ -74,7 +74,7 @@
     </slider-lightbox>
 </div>
 
-<div class="ng-image-slider thubnail-slider" [ngStyle]="{'height':sliderImageReceivedHeight}" *ngIf="isShowThumbnailImage">
+<div class="ng-image-slider thubnail-slider" [ngStyle]="{'height':sliderThumbnailReceivedHeight}" *ngIf="isShowThumbnailImage">
     <div class="ng-image-slider-container">
         <div class="main"
             #thumnailSliderMain>
@@ -87,7 +87,7 @@
                 <div class="thumbnail-section">
                     <ng-container *ngFor="let img of thubnailImages; let i = index">
                             <a (click)="clickOnThumbnail(i)" class="thumbnail-section-image cursor-pointer" [ngClass]="i===thmbnailImageIndex ? 'active' : ''" [ngStyle]="{'max-width':sliderThumbnailReceivedWidth}">
-                                <img [src]="img?.image" class="thumbnail-image">
+                                <img [src]="img?.image" class="thumbnail-image" [ngStyle]="{'height':sliderThumbnailReceivedHeight}">
                             </a>
                     </ng-container>
                     </div>
@@ -100,7 +100,7 @@
                     (mouseenter)="stopSlideOnHover && imageMouseEnterHandler()"
                     (mouseleave)="stopSlideOnHover && imageAutoSlide()">&lsaquo;</a>
                 <a *ngIf="showArrowButton && thubnailImages.length > 1"
-                    [ngClass]="{'disable': sliderNextDisable}"
+                    [ngClass]="{'disable': sliderThumbnailNextDisable}"
                     class="thubnail-next next icons next-icon"
                     (click)="nextThumbnail()"
                     (mouseenter)="imageMouseEnterHandler()"

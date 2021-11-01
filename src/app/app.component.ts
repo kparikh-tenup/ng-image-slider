@@ -42,10 +42,10 @@ export class AppComponent {
     }
 
     setImageObject() {
-        this.imageObject.push({
-                video: 'https://vimeo.com/411598677',
-                title: 'video'
-        })
+        // this.imageObject.push({
+        //         video: 'https://vimeo.com/411598677',
+        //         title: 'video'
+        // })
         this.imageObject.push({
             video: 'https://www.youtube.com/watch?v=jLtQH93m4bQ'
         })

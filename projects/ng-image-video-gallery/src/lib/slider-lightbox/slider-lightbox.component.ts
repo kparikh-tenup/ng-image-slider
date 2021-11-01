@@ -117,7 +117,6 @@ export class SliderLightboxComponent implements OnInit, AfterViewInit, OnDestroy
         @Inject(DOCUMENT) private document: any) { }
 
     ngOnInit() {
-        console.log(this.images)
     }
 
     ngAfterViewInit() {

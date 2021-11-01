@@ -17,7 +17,7 @@
                     (mouseenter)="stopSlideOnHover && imageMouseEnterHandler()"
                     (mouseleave)="stopSlideOnHover && imageAutoSlide()"
                     #imageDiv>
-                    <custom-img [imageUrl]="img?.thumbImage || img?.posterImage || img?.video ||img?.image"
+                    <custom-img (getThumbnail)="thumbnailImages($event)"[imageUrl]="img?.thumbImage || img?.posterImage || img?.video ||img?.image"
                         [isVideo]="!!(img?.posterImage || img?.video)"
                         [alt]="img?.alt || img?.title || ''"
                         [title]="img?.title || img?.alt || ''"
@@ -25,7 +25,8 @@
                         [ratio]="manageImageRatio"
                         [lazy]="lazyLoading"
                         [imgHeight]="sliderImageHeight+'px'"
-                        [imgData]='img'>
+                        [imgData]='img'
+                        [imagePositionInSlider]="img['index']">
                     </custom-img>
                 </div>
                     <div [dir]="textDirection" class="caption image-dev-container" *ngIf="img?.imageTitle || img?.imageDescription">
@@ -71,4 +72,40 @@
         (nextImage)="lightboxArrowClickHandler($event)"
         (close)="close()">
     </slider-lightbox>
+</div>
+
+<div class="ng-image-slider thubnail-slider" [ngStyle]="{'height':sliderImageReceivedHeight}" *ngIf="isShowThumbnailImage">
+    <div class="ng-image-slider-container">
+        <div class="main"
+            #thumnailSliderMain>
+            <div class="main-inner"
+                *ngIf="imageObj.length"
+                [ngClass]="{'with-ng-main-pagination': paginationShow}"
+                [ngStyle]="{'margin-left':thumbnailLeftPos+'px', 'width':thumbnailParentDivWidth+'px', 'transition': effectStyle}"
+                (touchstart)="swipe($event, 'start')"
+                (touchend)="swipe($event, 'end')">
+                <div class="thumbnail-section">
+                    <ng-container *ngFor="let img of thubnailImages; let i = index">
+                            <a (click)="clickOnThumbnail(i)" class="thumbnail-section-image cursor-pointer" [ngClass]="i===thmbnailImageIndex ? 'active' : ''" [ngStyle]="{'max-width':sliderThumbnailReceivedWidth}">
+                                <img [src]="img?.image" class="thumbnail-image" [ngStyle]="{'max-width':sliderThumbnailReceivedWidth}">
+                            </a>
+                    </ng-container>
+                    </div>
+            </div>
+            <ng-container *ngIf="isThumbnailbSlider">
+                <a *ngIf="showArrowButton && thubnailImages.length > 1"
+                    [ngClass]="{'disable': sliderThumbnailPrevDisable}"
+                    class="thubnail-prev prev icons prev-icon"
+                    (click)="prevThumbnail()"
+                    (mouseenter)="stopSlideOnHover && imageMouseEnterHandler()"
+                    (mouseleave)="stopSlideOnHover && imageAutoSlide()">&lsaquo;</a>
+                <a *ngIf="showArrowButton && thubnailImages.length > 1"
+                    [ngClass]="{'disable': sliderNextDisable}"
+                    class="thubnail-next next icons next-icon"
+                    (click)="nextThumbnail()"
+                    (mouseenter)="imageMouseEnterHandler()"
+                    (mouseleave)="imageAutoSlide()">&rsaquo;</a>
+            </ng-container>
+        </div>
+    </div>
 </div>

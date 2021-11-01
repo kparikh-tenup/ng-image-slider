@@ -477,3 +477,21 @@
 .cursor-pointer {
     cursor: pointer;
 }
+
+.thubnail-slider {
+    margin-top: 40px;
+    .thumbnail-section {
+        display: flex;
+        justify-content: space-between;
+        .thumbnail-section-image {
+            width: 100%;
+            .thumbnail-image {
+                width: 100%;        
+            }
+            &.active {
+                border: 1px solid blue;
+            }
+        }
+    
+    }
+}

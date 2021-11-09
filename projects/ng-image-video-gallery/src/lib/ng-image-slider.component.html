@@ -1,4 +1,4 @@
-<div class="ng-image-slider" [ngStyle]="{'height':sliderHeight}">
+<div class="ng-image-slider img-slider" [ngStyle]="{'height':sliderHeight}">
     <div class="ng-image-slider-container">
         <div class="main"
             #sliderMain>
@@ -17,7 +17,7 @@
                     (mouseenter)="stopSlideOnHover && imageMouseEnterHandler()"
                     (mouseleave)="stopSlideOnHover && imageAutoSlide()"
                     #imageDiv>
-                    <custom-img (getThumbnail)="thumbnailImages($event)"[imageUrl]="img?.thumbImage || img?.posterImage || img?.video ||img?.image"
+                    <custom-img (getThumbnail)="getThumbnailImages($event)"[imageUrl]="img?.thumbImage || img?.posterImage || img?.video ||img?.image"
                         [isVideo]="!!(img?.posterImage || img?.video)"
                         [alt]="img?.alt || img?.title || ''"
                         [title]="img?.title || img?.alt || ''"
@@ -85,21 +85,21 @@
                 (touchstart)="swipe($event, 'start')"
                 (touchend)="swipe($event, 'end')">
                 <div class="thumbnail-section">
-                    <ng-container *ngFor="let img of thubnailImages; let i = index">
+                    <ng-container *ngFor="let img of thumbnailImages; let i = index">
                             <a (click)="clickOnThumbnail(i)" class="thumbnail-section-image cursor-pointer" [ngClass]="i===thmbnailImageIndex ? 'active' : ''" [ngStyle]="{'max-width':sliderThumbnailReceivedWidth}">
-                                <img [src]="img?.image" class="thumbnail-image" [ngStyle]="{'height':sliderThumbnailReceivedHeight}">
+                                <img [src]="img?.image ? img?.image : img['thumbnail-image']" class="thumbnail-image" [ngStyle]="{'height':sliderThumbnailReceivedHeight}">
                             </a>
                     </ng-container>
                     </div>
             </div>
             <ng-container *ngIf="isThumbnailbSlider">
-                <a *ngIf="showArrowButton && thubnailImages.length > 1"
+                <a *ngIf="showArrowButton && thumbnailImages.length > 0"
                     [ngClass]="{'disable': sliderThumbnailPrevDisable}"
                     class="thubnail-prev prev icons prev-icon"
                     (click)="prevThumbnail()"
                     (mouseenter)="stopSlideOnHover && imageMouseEnterHandler()"
                     (mouseleave)="stopSlideOnHover && imageAutoSlide()">&lsaquo;</a>
-                <a *ngIf="showArrowButton && thubnailImages.length > 1"
+                <a *ngIf="showArrowButton && thumbnailImages.length > 0"
                     [ngClass]="{'disable': sliderThumbnailNextDisable}"
                     class="thubnail-next next icons next-icon"
                     (click)="nextThumbnail()"

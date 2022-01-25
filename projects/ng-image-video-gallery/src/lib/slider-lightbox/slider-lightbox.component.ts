@@ -148,6 +148,7 @@ export class SliderLightboxComponent implements OnInit, AfterViewInit, OnDestroy
     prevImageLightbox() {
         this.effectStyle = `all ${this.speed}s ease-in-out`;
         if (this.currentImageIndex > 0 && !this.lightboxPrevDisable) {
+            this.videoPause();
             this.currentImageIndex--;
             this.prevImage.emit(LIGHTBOX_PREV_ARROW_CLICK_MESSAGE);
             this.marginLeft = -1 * this.popupWidth * this.currentImageIndex;
@@ -156,9 +157,23 @@ export class SliderLightboxComponent implements OnInit, AfterViewInit, OnDestroy
         }
     }
 
+    videoPause() {
+        document.querySelectorAll('iframe').forEach(iframeUrl=> {
+            if(iframeUrl.src.indexOf('https://players.brightcove.net') !== -1) {
+              iframeUrl.src = iframeUrl.src+'&muted';
+            }
+             if(iframeUrl.src.indexOf('https://player.vimeo.com') !== -1) {
+                var data = { method: "pause" };
+                iframeUrl.contentWindow.postMessage(JSON.stringify(data), "*");       
+           } 
+        });
+         
+    }
+
     nextImageLightbox() {
         this.effectStyle = `all ${this.speed}s ease-in-out`;
         if (this.currentImageIndex < this.images.length - 1 && !this.lightboxNextDisable) {
+            this.videoPause();
             this.currentImageIndex++;
             this.nextImage.emit(LIGHTBOX_NEXT_ARROW_CLICK_MESSAGE);
             this.marginLeft = -1 * this.popupWidth * this.currentImageIndex;

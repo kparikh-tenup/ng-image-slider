@@ -16,7 +16,7 @@ const youtubeRegExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|\?v=)([
     validFileExtensions = ['jpeg', 'jpg', 'gif', 'png'],
     validVideoExtensions = ['mp4'];
 const vimeoRegExp = /\/\/(?:www.)?vimeo.com\/([0-9a-z-_]+)/i;
-
+const wistiaRegExp=/https?:\/\/[^.]+\.(wistia\.com|wi\.st)\/(medias|embed)\/.*/
 @Component({
     selector: 'custom-img',
     templateUrl: './slider-custom-image.component.html'
@@ -32,6 +32,7 @@ export class SliderCustomImageComponent implements OnChanges {
     fileExtension = '';
     type = this.IMAGE;
     imageLoading:boolean = true;
+    wistiaUrl:string='';
     // @inputs
     @Input() showVideo: boolean = false;
     @Input() videoAutoPlay: boolean = false;
@@ -87,6 +88,8 @@ export class SliderCustomImageComponent implements OnChanges {
         // verify for youtube url
         const match = url.match(youtubeRegExp);
         const matchVimeoUrl = url.match(vimeoRegExp);
+        const matchWistiaUrl=url.match(wistiaRegExp);
+        
         if (match && match[2].length === 11) {
             if (this.showVideo) {
                 this.type = this.YOUTUBE;
@@ -133,6 +136,22 @@ export class SliderCustomImageComponent implements OnChanges {
                 let thumnailObject = {index: this.imagePositionInSlider, image: this.videoUrl}
                 this.getThumbnail.emit(thumnailObject);
             }
+        }
+        else if(url.indexOf(matchWistiaUrl) && url.indexOf('wistia') !== -1){
+            this.sliderService.getoEmbedResponse("http://fast.wistia.com/oembed.json?url=",url).subscribe(res =>
+               { 
+                   if(this.showVideo){
+                    this.type = this.ANOTHER_VIDEO;
+                    this.wistiaUrl=url+`?resumable=false`
+                    this.videoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.wistiaUrl);
+                }
+                else {
+                    this.type = this.IMAGE;
+                    this.videoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(res['thumbnail_url']);
+                    let thumnailObject = {index: this.imagePositionInSlider, image: this.videoUrl}
+                    this.getThumbnail.emit(thumnailObject);
+                }
+            })
         }
         else if (this.fileExtension && validFileExtensions.indexOf(this.fileExtension.toLowerCase()) > -1) {
             this.type = this.IMAGE;

@@ -162,7 +162,7 @@ export class SliderLightboxComponent implements OnInit, AfterViewInit, OnDestroy
             if(iframeUrl.src.indexOf('https://players.brightcove.net') !== -1) {
               iframeUrl.src = iframeUrl.src+'&muted';
             }
-             if(iframeUrl.src.indexOf('https://player.vimeo.com') !== -1) {
+             if(iframeUrl.src.indexOf('https://player.vimeo.com') !== -1 || iframeUrl.src.indexOf('wistia') !== -1) {
                 var data = { method: "pause" };
                 iframeUrl.contentWindow.postMessage(JSON.stringify(data), "*");       
            } 

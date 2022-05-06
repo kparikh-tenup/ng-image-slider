@@ -70,7 +70,8 @@
         [videoAutoPlay]="videoAutoPlay"
         (prevImage)="lightboxArrowClickHandler($event)"
         (nextImage)="lightboxArrowClickHandler($event)"
-        (close)="close()">
+        (close)="close()"
+        (closeLightBox)='closeLightBox($event)'>
     </slider-lightbox>
 </div>
 
@@ -85,11 +86,20 @@
                 (touchstart)="swipe($event, 'start')"
                 (touchend)="swipe($event, 'end')">
                 <div class="thumbnail-section">
+                <ng-container *ngIf="!infinite;else infiniteThumbnail">
                     <ng-container *ngFor="let img of thumbnailImages; let i = index">
                             <a (click)="clickOnThumbnail(i)" class="thumbnail-section-image cursor-pointer" [ngClass]="i===thmbnailImageIndex ? 'active' : ''" [ngStyle]="{'max-width':sliderThumbnailReceivedWidth}">
                                 <img [src]="img?.image ? img?.image : img['thumbnail-image']" class="thumbnail-image" [ngStyle]="{'height':sliderThumbnailReceivedHeight}">
                             </a>
                     </ng-container>
+                </ng-container>
+                <ng-template #infiniteThumbnail>
+                    <ng-container *ngFor="let img of infiniteSliderThumbnail; let i = index">
+                        <a [attr.data-infocolindex]="i" (click)="clickOnThumbnail(i)" class="thumbnail-section-image cursor-pointer" [ngClass]="i===infiniteThumbnailImageIndex ? 'active' : ''" [ngStyle]="{'max-width':sliderThumbnailReceivedWidth}">
+                            <img [src]="img?.image ? img?.image : img['thumbnail-image']" class="thumbnail-image" [ngStyle]="{'height':sliderThumbnailReceivedHeight}">
+                        </a>
+                    </ng-container>
+                </ng-template>
                     </div>
             </div>
             <ng-container *ngIf="isThumbnailbSlider">

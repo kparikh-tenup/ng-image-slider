@@ -74,6 +74,11 @@ export class NgImageSliderComponent implements OnChanges, OnInit, DoCheck, After
     sliderLastIndex = 0;
     sliderIndex = 0;
     thumbnailIndex = 0;
+    //for infinite scroll
+    infiniteSliderThumbnail=[];
+    infiniteThumbnailImageIndex=1;
+    leftPosition=0;
+    closeLightbox:boolean=false;
 
     // for swipe event
     private swipeCoord?: [number, number];
@@ -237,11 +242,11 @@ export class NgImageSliderComponent implements OnChanges, OnInit, DoCheck, After
             this.effectStyle = 'none';
             this.leftPos = -1 * this.sliderImageSizeWithPadding * this.slideImageCount;
             this.thumbnailLeftPos = -1 * this.sliderThumbnailSizeWithPadding * this.slideThumbnailCount;
-
-            for (let i = 1; i <= this.slideImageCount; i++) {
-                this.imageObj.unshift(this.imageObj[this.imageObj.length - i]);
-                this.thumbnailImages.unshift(this.imageObj[this.imageObj.length - i]);
-            }
+            this.infiniteSliderThumbnail.push(...this.images);
+            // for (let i = 1; i <= this.slideImageCount; i++) {
+                    // this.imageObj.unshift(this.imageObj[this.imageObj.length - 1]);
+                    //  this.thumbnailImages.unshift(this.imageObj[this.imageObj.length - i]);
+            // }
         }
         this.thumbnailImages = this.imageObj;
     }
@@ -359,6 +364,7 @@ export class NgImageSliderComponent implements OnChanges, OnInit, DoCheck, After
         this.imageParentDivWidth = this.imageObj.length * this.sliderImageSizeWithPadding;
         if (this.imageDiv && this.imageDiv.nativeElement && this.imageDiv.nativeElement.offsetWidth) {
             this.leftPos = this.infinite ? -1 * this.sliderImageSizeWithPadding * this.slideImageCount : 0;
+            this.leftPosition=-1 * this.sliderImageSizeWithPadding * this.slideImageCount ;
         }
         this.nextPrevSliderButtonDisable();
     }
@@ -402,7 +408,7 @@ export class NgImageSliderComponent implements OnChanges, OnInit, DoCheck, After
         this.sliderThumbnailSizeWithPadding = this.sliderThumbnailWidth + (this.imageMargin * 2);
         this.thumbnailParentDivWidth = this.imageObj.length * this.sliderThumbnailSizeWithPadding;
         if (this.imageDiv && this.imageDiv.nativeElement && this.imageDiv.nativeElement.offsetWidth) {
-            this.thumbnailLeftPos = this.infinite ? -1 * this.sliderThumbnailSizeWithPadding * this.slideThumbnailCount : 0;
+            this.thumbnailLeftPos = this.infinite ? 0 : 0;
         }
         this.nextPrevThumnailSliderButtonDisable();
     }
@@ -424,6 +430,10 @@ export class NgImageSliderComponent implements OnChanges, OnInit, DoCheck, After
         }
     }
     
+
+    closeLightBox(event) { 
+        this.ligthboxImageObj=event;
+      }
 
     imageMouseEnterHandler() {
         if (this.infinite && this.autoSlideCount && this.autoSlideInterval) {
@@ -449,7 +459,7 @@ export class NgImageSliderComponent implements OnChanges, OnInit, DoCheck, After
     prevThumbnail() {
         if (!this.sliderThumbnailPrevDisable) {
             if (this.infinite) {
-                this.infinitePrevImg();
+                this.infinitePrevThumbnailImg();
             } else {
                 this.prevThumbnailImg();
             }
@@ -477,7 +487,7 @@ export class NgImageSliderComponent implements OnChanges, OnInit, DoCheck, After
     nextThumbnail() {
         if (!this.sliderThumbnailNextDisable) {
             if (this.infinite) {
-                this.infiniteNextImg();
+                this.infiniteNextThumbnailImg();
             } else {
                 this.nextThumbnailImg();
             }
@@ -506,6 +516,16 @@ export class NgImageSliderComponent implements OnChanges, OnInit, DoCheck, After
         }
     }
 
+    infinitePrevThumbnailImg(){
+        this.effectStyle = `all ${this.speed}s ease-in-out`;
+        if (0 >= this.thumbnailLeftPos + (this.sliderThumbnailSizeWithPadding * this.slideThumbnailCount)) {
+            this.thumbnailLeftPos += this.thumbnailSliderMainDivWidth;
+        } 
+        else {
+            this.thumbnailLeftPos = 0;
+        }
+    }
+
     nextImg() {
         if ((this.imageParentDivWidth + this.leftPos) - this.sliderMainDivWidth > this.sliderImageSizeWithPadding * this.slideImageCount) {
             this.leftPos -= this.sliderImageSizeWithPadding * this.slideImageCount;       
@@ -524,15 +544,34 @@ export class NgImageSliderComponent implements OnChanges, OnInit, DoCheck, After
         }
     }
 
+    infiniteNextThumbnailImg(){
+        this.effectStyle = `all ${this.speed}s ease-in-out`;
+        if ((this.thumbnailParentDivWidth + this.thumbnailLeftPos) - this.thumbnailSliderMainDivWidth > this.sliderThumbnailSizeWithPadding * this.slideThumbnailCount) {
+            this.thumbnailLeftPos -= this.thumbnailSliderMainDivWidth;
+        } else if ((this.thumbnailParentDivWidth + this.thumbnailLeftPos) - this.thumbnailSliderMainDivWidth > 0) {
+            this.thumbnailLeftPos -=  this.thumbnailSliderMainDivWidth;
+        }
+    }
+
     infinitePrevImg() {
         this.effectStyle = `all ${this.speed}s ease-in-out`;
-        this.leftPos = 0;
-
+        if (0 > this.leftPosition + (this.sliderImageSizeWithPadding * this.slideImageCount)) {
+            this.leftPosition +=this.sliderImageSizeWithPadding * this.slideImageCount;
+            (this.sliderIndex === this.thumbnailIndex)  ?  this.thumbnailLeftPos =  (this.thumbnailLeftPos+this.thumbnailSliderMainDivWidth) : '';  
+        } else if(this.infiniteThumbnailImageIndex === 0) {
+            let totalDivForThumbnail=Math.ceil(this.thumbnailParentDivWidth/this.sliderImageSizeWithPadding);
+            let lastPositionOfThumbnail=(totalDivForThumbnail -1)*this.sliderImageSizeWithPadding;
+            this.thumbnailLeftPos -= lastPositionOfThumbnail;
+            this.leftPosition -= (this.imageObj.length -1) * this.sliderImageSizeWithPadding;
+        }else{
+            this.leftPosition +=this.sliderImageSizeWithPadding;
+        }
+        this.leftPos +=this.sliderImageSizeWithPadding
         setTimeout(() => {
             this.effectStyle = 'none';
-            this.leftPos = -1 * this.sliderImageSizeWithPadding * this.slideImageCount;
+            this.leftPos -= this.sliderImageSizeWithPadding;
             for (let i = 0; i < this.slideImageCount; i++) {
-                this.imageObj.unshift(this.imageObj[this.imageObj.length - this.slideImageCount - 1]);
+                this.imageObj.unshift(this.imageObj[this.imageObj.length - 1]);
                 this.imageObj.pop();
             }
         }, this.speed * 1000);
@@ -540,26 +579,45 @@ export class NgImageSliderComponent implements OnChanges, OnInit, DoCheck, After
 
     infiniteNextImg() {
         this.effectStyle = `all ${this.speed}s ease-in-out`;
-        this.leftPos = -2 * this.sliderImageSizeWithPadding * this.slideImageCount;
+        if ((this.imageParentDivWidth + this.leftPosition) - this.sliderMainDivWidth > this.sliderImageSizeWithPadding * this.slideImageCount) {
+            (this.sliderLastIndex >= this.thumbnailLastIndex && this.thumbnailLastIndex)  ? this.thumbnailLeftPos = -this.sliderThumbnailSizeWithPadding * this.thumbnailLastIndex :'';
+            this.leftPosition -=  this.sliderImageSizeWithPadding ;
+        }
+        else {
+               this.thumbnailLeftPos=0;
+               this.leftPosition=0;
+        }
+        this.leftPos -=  this.sliderImageSizeWithPadding;
         setTimeout(() => {
             this.effectStyle = 'none';
-            for (let i = 0; i < this.slideImageCount; i++) {
-                this.imageObj.push(this.imageObj[this.slideImageCount]);
+            for (let i = 0;i < this.slideImageCount ; i++) {
+                this.imageObj.push(this.imageObj[0]);
                 this.imageObj.shift();
             }
-            this.leftPos = -1 * this.sliderImageSizeWithPadding * this.slideImageCount;
+            this.leftPos += this.sliderImageSizeWithPadding;
         }, this.speed * 1000);
     }
 
     getVisiableIndex() {
-        const currentIndex = Math.round((Math.abs(this.leftPos) + this.sliderImageWidth) / this.sliderImageWidth);
-        const currentLastIndex = Math.round((Math.abs(this.leftPos) + this.sliderMainDivWidth) / this.sliderImageWidth);
-        if (this.imageObj[currentIndex - 1] && this.imageObj[currentIndex - 1]['index'] !== undefined) {
-            this.visiableImageIndex = this.imageObj[currentIndex - 1]['index'];
+        if(!this.infinite){
+            const currentIndex = Math.round((Math.abs(this.leftPos) + this.sliderImageWidth) / this.sliderImageWidth);
+            const currentLastIndex = Math.round((Math.abs(this.leftPos) + this.sliderMainDivWidth) / this.sliderImageWidth);
+            if (this.imageObj[currentIndex - 1] && this.imageObj[currentIndex - 1]['index'] !== undefined) {
+                this.visiableImageIndex = this.imageObj[currentIndex - 1]['index'];
+            }
+            this.thmbnailImageIndex = currentIndex-1;
+            this.sliderLastIndex = currentLastIndex;
+            this.sliderIndex = currentIndex;
+        }else{
+            const infiniteCurrentIndex = Math.round((Math.abs(this.leftPosition) + this.sliderImageWidth) / this.sliderImageWidth);
+            const infiniteCurrentLastIndex = Math.round((Math.abs(this.leftPosition) + this.sliderMainDivWidth) / this.sliderImageWidth);
+            if (this.imageObj[infiniteCurrentIndex - 1] && this.imageObj[infiniteCurrentIndex - 1]['index'] !== undefined) {
+                this.visiableImageIndex = this.imageObj[infiniteCurrentIndex - 1]['index'];
+            }
+            this.infiniteThumbnailImageIndex = infiniteCurrentIndex-1;
+            this.sliderLastIndex = infiniteCurrentLastIndex;
+            this.sliderIndex = infiniteCurrentIndex;
         }
-        this.thmbnailImageIndex = currentIndex-1;
-    this.sliderLastIndex = currentLastIndex;
-    this.sliderIndex = currentIndex;
     }
 
     getVisiableThumbnailIndex() {
@@ -705,9 +763,20 @@ export class NgImageSliderComponent implements OnChanges, OnInit, DoCheck, After
     }
 
     clickOnThumbnail(index) {
+        let infiniteImageIndex=this.imageObj.indexOf(this.infiniteSliderThumbnail[index]);
+        if(this.infinite){
+            this.effectStyle = `all ${this.speed}s ease-in-out`;
+            this.leftPos = -this.sliderImageSizeWithPadding *(infiniteImageIndex);
+            this.leftPosition = -this.sliderImageSizeWithPadding *(index);
+            this.sliderIndex = index+1;
+            this.infiniteThumbnailImageIndex=index;
+            this.getVisiableThumbnailIndex();
+            this.getVisiableIndex();
+        }else{
         this.thmbnailImageIndex = index;
         this.sliderIndex = index+1;
         this.leftPos = -this.sliderImageSizeWithPadding *(index);
+        }
         if(index !== 0 || index !== this.imageObj.length-1) {
             this.sliderNextDisable = false;
             this.sliderPrevDisable = false;

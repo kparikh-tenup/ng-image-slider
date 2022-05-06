@@ -39,7 +39,7 @@ export class SliderLightboxComponent implements OnInit, AfterViewInit, OnDestroy
     title: string = '';
     currentImageIndex: number = 0;
     galleryData;
-
+    imageData=[];
     // for swipe event
     private swipeLightboxImgCoord?: [number, number];
     private swipeLightboxImgTime?: number;
@@ -87,6 +87,7 @@ export class SliderLightboxComponent implements OnInit, AfterViewInit, OnDestroy
     @Output() close = new EventEmitter<any>();
     @Output() prevImage = new EventEmitter<any>();
     @Output() nextImage = new EventEmitter<any>();
+    @Output() closeLightBox: EventEmitter<any> = new EventEmitter<string>();
 
     @HostListener('window:resize', ['$event'])
     onResize(event) {
@@ -117,6 +118,7 @@ export class SliderLightboxComponent implements OnInit, AfterViewInit, OnDestroy
         @Inject(DOCUMENT) private document: any) { }
 
     ngOnInit() {
+        this.imageData=[...this.images]
     }
 
     ngAfterViewInit() {
@@ -143,11 +145,12 @@ export class SliderLightboxComponent implements OnInit, AfterViewInit, OnDestroy
 
     closeLightbox() {
         this.close.emit();
+        this.closeLightBox.emit([...this.imageData]); 
     }
 
     prevImageLightbox() {
         this.effectStyle = `all ${this.speed}s ease-in-out`;
-        if (this.currentImageIndex > 0 && !this.lightboxPrevDisable) {
+        if (this.currentImageIndex > 0 && !this.lightboxPrevDisable && !this.infinite) {
             this.videoPause();
             this.currentImageIndex--;
             this.prevImage.emit(LIGHTBOX_PREV_ARROW_CLICK_MESSAGE);
@@ -155,10 +158,29 @@ export class SliderLightboxComponent implements OnInit, AfterViewInit, OnDestroy
             this.getImageData();
             this.nextPrevDisable();
         }
+        if(this.infinite){
+            this.videoAutoPlay=false;
+            this.videoPause();
+            this.currentImageIndex--;
+            this.prevImage.emit(LIGHTBOX_PREV_ARROW_CLICK_MESSAGE);
+            this.marginLeft +=this.popupWidth ;
+            setTimeout(() => {
+                this.effectStyle = 'none';
+                this.marginLeft -=  this.popupWidth ;
+                for (let i = 0; i < 1; i++) {
+                    this.images.unshift(this.images[this.images.length-1]);
+                    this.images.pop();
+                }
+            }, this.speed * 1000);
+            this.nextPrevDisable();
+        }
     }
 
     videoPause() {
         document.querySelectorAll('iframe').forEach(iframeUrl=> {
+            if (iframeUrl.src.startsWith("https://www.youtube.com")) {
+               iframeUrl.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}',"*");
+            }
             if(iframeUrl.src.indexOf('https://players.brightcove.net') !== -1) {
               iframeUrl.src = iframeUrl.src+'&muted';
             }
@@ -172,12 +194,27 @@ export class SliderLightboxComponent implements OnInit, AfterViewInit, OnDestroy
 
     nextImageLightbox() {
         this.effectStyle = `all ${this.speed}s ease-in-out`;
-        if (this.currentImageIndex < this.images.length - 1 && !this.lightboxNextDisable) {
+        if (this.currentImageIndex < this.images.length - 1 && !this.lightboxNextDisable && !this.infinite) {
             this.videoPause();
             this.currentImageIndex++;
             this.nextImage.emit(LIGHTBOX_NEXT_ARROW_CLICK_MESSAGE);
             this.marginLeft = -1 * this.popupWidth * this.currentImageIndex;
             this.getImageData();
+            this.nextPrevDisable();
+        }
+        if(this.infinite){
+            this.videoAutoPlay=false;
+            this.videoPause();
+            this.nextImage.emit(LIGHTBOX_NEXT_ARROW_CLICK_MESSAGE);
+            this.marginLeft -=this.popupWidth ;
+            setTimeout(() => {
+                this.effectStyle = 'none';
+                for (let i = 0; i < 1; i++) {
+                    this.images.push(this.images[0]);
+                    this.images.shift();
+                 }
+                 this.marginLeft += this.popupWidth;
+            }, this.speed * 1000);
             this.nextPrevDisable();
         }
     }

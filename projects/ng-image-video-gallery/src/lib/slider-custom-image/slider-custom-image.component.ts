@@ -138,7 +138,7 @@ export class SliderCustomImageComponent implements OnChanges {
             }
         }
         else if(url.indexOf(matchWistiaUrl) && url.indexOf('wistia') !== -1){
-            this.sliderService.getoEmbedResponse("http://fast.wistia.com/oembed.json?url=",url).subscribe(res =>
+            this.sliderService.getoEmbedResponse("https://fast.wistia.com/oembed.json?url=",url).subscribe(res =>
                { 
                    if(this.showVideo){
                     this.type = this.ANOTHER_VIDEO;

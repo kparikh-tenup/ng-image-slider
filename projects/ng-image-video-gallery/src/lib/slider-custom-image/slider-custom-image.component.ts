@@ -96,7 +96,9 @@ export class SliderCustomImageComponent implements OnChanges {
                 this.fileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(`${'https://www.youtube.com/embed/'}${match[2]}${this.videoAutoPlay ? '?autoplay=1&enablejsapi=1' : '?autoplay=0&enablejsapi=1'}${'&controls='}${this.showVideoControls}`);
             } else {
                 this.type = this.IMAGE;
-                this.fileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(`https://img.youtube.com/vi/${match[2]}/0.jpg`);
+                //this.fileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(`https://img.youtube.com/vi/${match[2]}/0.jpg`);
+                // Remove black background and get full size high resoultion image
+                this.fileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(`https://img.youtube.com/vi/${match[2]}/maxresdefault.jpg`);
                 let thumnailObject = {index: this.imagePositionInSlider, image: this.fileUrl}
                 this.getThumbnail.emit(thumnailObject);
             }
